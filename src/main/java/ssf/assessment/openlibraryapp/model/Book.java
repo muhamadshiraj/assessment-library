@@ -13,7 +13,7 @@ public class Book {
     private String title;
     private String key;
     public String description;
-    public String excerpts;
+    public String excerpt;
 
 
     public Book(){
@@ -44,17 +44,17 @@ public class Book {
         this.description = description;
     }
 
-    public String getExcerpts() {
-        return excerpts;
+    public String getExcerpt() {
+        return excerpt;
     }
 
-    public void setExcerpts(String excerpts) {
-        this.excerpts = excerpts;
+    public void setExcerpt(String excerpt) {
+        this.excerpt = excerpt;
     }
 
     public static Book create(JsonObject o) {
         final Book w = new Book();
-        w.setKey(o.getString("key"));
+        w.setKey(o.getString("key").replace("works", "book"));
         w.setTitle(o.getString("title"));
         return w;
     }

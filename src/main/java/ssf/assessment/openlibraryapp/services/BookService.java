@@ -25,16 +25,15 @@ import static ssf.assessment.openlibraryapp.util.Constants.*;
 
 @Service
 public class BookService {
-    
+
     private final Logger logger = Logger.getLogger(OpenlibraryappApplication.class.getName());
 
-    public List<Book> search(String searchTerm){
-        
+    public List<Book> search(String searchTerm) {
 
         String url = UriComponentsBuilder.fromUriString(URL_OPENLIBRARY)
-        .queryParam("q", searchTerm.trim().replace(" ", "+"))
-        .queryParam("limit", "20")
-        .toUriString();
+                .queryParam("q", searchTerm.trim().replace(" ", "+"))
+                .queryParam("limit", "20")
+                .toUriString();
 
         logger.log(Level.INFO, ">>>URL output:" + url);
 
@@ -44,29 +43,62 @@ public class BookService {
 
         if (resp.getStatusCode() != HttpStatus.OK)
             throw new IllegalArgumentException(
-                "ERROR: status code %s".formatted(resp.getStatusCode().toString())
-            );
-        
+                    "ERROR: status code %s".formatted(resp.getStatusCode().toString()));
+
         final String jsonBody = resp.getBody();
         logger.log(Level.INFO, "payload: %s".formatted(jsonBody));
-        
-        
+
         try (InputStream is = new ByteArrayInputStream(jsonBody.getBytes())) {
             final JsonReader reader = Json.createReader(is);
             final JsonObject result = reader.readObject();
             final JsonArray readings = result.getJsonArray("docs");
-            
-            
-        return readings.stream()
-            .map(v -> (JsonObject)v)
-            .map(Book::create)
-            .collect(Collectors.toList());
-        } catch (Exception ex) { 
-        ex.printStackTrace();
-    }
-    
-    return Collections.EMPTY_LIST;
-}
 
-    
+            return readings.stream()
+                    .map(v -> (JsonObject) v)
+                    .map(Book::create)
+                    .collect(Collectors.toList());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return Collections.EMPTY_LIST;
+    }
+
+    public Book jsonToBook(String jsonBody) {
+        try (InputStream is = new ByteArrayInputStream(jsonBody.getBytes())) {
+            final JsonReader reader = Json.createReader(is);
+            final JsonObject result = reader.readObject();
+
+            Book book = new Book();
+            logger.log(Level.INFO, "book title is: " + result.getString("title"));
+            book.setTitle(result.getString("title"));
+
+            String description = "Not available";
+            try {
+                if (result.getString("description").trim().length() > 0) {
+                    description = result.getString("description");
+                }
+            } catch (Exception e) {
+                logger.log(Level.INFO, ">>>Description not available" + e.toString());
+            }
+            book.setDescription(description);
+
+            String excerpt = "Not Available";
+            try {
+                String excerptFromJson = result.getJsonArray("excerpt").getJsonObject(0).getString("excerpt");
+                if (excerptFromJson.trim().length() > 0) {
+                    excerpt = excerptFromJson;
+                }
+            } catch (Exception e) {
+                logger.log(Level.INFO, ">>>Excerpt not available" + e.toString());
+            }
+            book.setExcerpt(excerpt);
+            return book;
+
+        } catch (Exception e) {
+            logger.log(Level.INFO, e.toString());
+            return new Book();
+        }
+    }
+
 }

@@ -30,28 +30,25 @@
         
                     <div class="row d-flex justify-content-center mt-2">
                         <table class="table table-hover" th:each="w : ${book}">
-                            <ul>
-                                <a th:href="@{${w.key}}"><li th:text="${w.title}"></li></a>
-                            </ul>
+                            <ol>
+                                <a th:href="@{/book/{id} (id=${w.key})}"><li th:text="${w.title}"></li></a>
+                            </ol>
                         </table>
                     </div>
                 </div>
-
-                <!-- <div class="col">
-                    <ol>
-                        <span th:each="w : ${book}">
-                            <li>
-                                <a th:href="@{/book/{id}(id=${book.key})}" th:text="${book.title}"></a>
-                            </li>
-                        </span>
-                    </ol>
-                </div>  -->
-    
             <div class="row">
-                <div class="col d-flex justify-content-end">
+                <div class="col d-flex justify-content-center">
+                    <p>more results, not shown</more></p>
+                </div>
+            </div>
+            <div class="row">
+
+                
+                <div class="col d-flex justify-content-center">
                     <a href="/" class="btn btn-primary btn-lg">Back</a>
                 </div>
             </div>
+
     
         </div>
         

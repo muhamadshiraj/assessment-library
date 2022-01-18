@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book View</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h4>Title: <span th:text="${bookObj.title}"></span></h4>
+                <h4>Description: <span th:text="${bookObj.description}"></span></h4>
+                <h4>Excerpt: <span th:text="${bookObj.excerpt}"></span></h4>
+                <h4>Cached: <span th:if="${bookObj.cached} == true">True</span>
+                            <span th:if="${bookObj.cached} == false">False</span>
+                </h4>
+            
+                <form 
+                action="/search/main"
+                method="GET">
+                            <div class="input-group mb-3"> 
+                                <button type="submit" class="btn btn-primary">Back to Search</button>
+                            </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
