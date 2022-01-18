@@ -29,11 +29,11 @@
                 </div>
         
                     <div class="row d-flex justify-content-center mt-2">
-                        <table class="table table-hover" th:each="w : ${book}">
-                            <ol>
-                                <a th:href="@{/book/{id} (id=${w.key})}"><li th:text="${w.title}"></li></a>
-                            </ol>
-                        </table>
+                        <ol class="table table-hover" th:each="w : ${book}">
+                            <li>
+                                <a th:href="${w.worksId}" th:text="${w.title}"></a>
+                            </li>
+                        </ol>
                     </div>
                 </div>
             <div class="row">

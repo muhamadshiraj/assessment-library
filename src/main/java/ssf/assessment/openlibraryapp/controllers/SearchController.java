@@ -49,5 +49,4 @@ public class SearchController {
         return "result";
     }
 
-    @PostMapping
 }

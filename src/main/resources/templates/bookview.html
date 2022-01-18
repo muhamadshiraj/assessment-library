@@ -10,13 +10,9 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <h4>Title: <span th:text="${bookObj.title}"></span></h4>
-                <h4>Description: <span th:text="${bookObj.description}"></span></h4>
-                <h4>Excerpt: <span th:text="${bookObj.excerpt}"></span></h4>
-                <h4>Cached: <span th:if="${bookObj.cached} == true">True</span>
-                            <span th:if="${bookObj.cached} == false">False</span>
-                </h4>
-            
+                <h4>Title: <span th:text="${book.title}"></span></h4>
+                <h4>Description: <span th:text="${book.description}"></span></h4>
+                <h4>Excerpt: <span th:text="${book.excerpt}"></span></h4>
                 <form 
                 action="/search/main"
                 method="GET">

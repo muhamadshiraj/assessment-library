@@ -9,17 +9,16 @@ import jakarta.json.JsonReader;
 
 public class Book {
 
-
     private String title;
-    private String key;
+    private String worksId;
     public String description;
     public String excerpt;
+    private boolean cached;
 
-
-    public Book(){
+    public Book() {
 
     }
-    
+
     public String getTitle() {
         return title;
     }
@@ -28,12 +27,12 @@ public class Book {
         this.title = title;
     }
 
-    public String getKey() {
-        return key;
+    public String getWorksId() {
+        return worksId;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setWorksId(String worksId) {
+        this.worksId = worksId;
     }
 
     public String getDescription() {
@@ -52,34 +51,75 @@ public class Book {
         this.excerpt = excerpt;
     }
 
+    public boolean isCached() {
+        return cached;
+    }
+
+    public void setCached(boolean cached) {
+        this.cached = cached;
+    }
+
     public static Book create(JsonObject o) {
         final Book w = new Book();
-        w.setKey(o.getString("key").replace("works", "book"));
+        w.setWorksId(o.getString("key").replace("works", "book"));
         w.setTitle(o.getString("title"));
         return w;
     }
-
 
     public static Book create(String jsonString) {
         try (InputStream is = new ByteArrayInputStream(jsonString.getBytes())) {
             final JsonReader reader = Json.createReader(is);
             return create(reader.readObject());
-        } catch (Exception ex) { }
-
+        } catch (Exception ex) {
+        }
+    
+        
         // Need to handle error
         return new Book();
+    }
+    public static Book getDetails(JsonObject o) {
+        final Book b = new Book();
+        if (o.containsKey("key")) {
+            b.setWorksId(o.getString("key").replace("/works/", ""));
+        }
+        if (o.containsKey("title")) {
+            try {
+                b.setTitle(o.getString("title"));
+            } catch (Exception e) {
+                b.setTitle("Not available.");
+            }
+        }
+        if (o.containsKey("description")) {
+            try {
+                b.setDescription(o.getString("description"));
+            } catch (Exception e) {
+                b.setDescription("Not available.");
+            }
+        }else{
+            b.setDescription("Not available.");
+        }
+        if (o.containsKey("excerpt")) {
+            try {
+                b.setExcerpt(o.getString("excerpt"));
+            } catch (Exception e) {
+                b.setExcerpt("Not available.");
+            }
+        }else{
+            b.setExcerpt("Not available.");
+        }
+        return b;
     }
 
     @Override
     public String toString() {
-        return "key: %s, title: %s".formatted(key, title);
+        return "key: %s, title: %s".formatted(worksId, title);
     }
 
     public JsonObject toJson() {
         return Json.createObjectBuilder()
-            .add("key", key)
-            .add("title", title)
-            .build();
+                .add("key", worksId)
+                .add("title", title)
+                .build();
     }
-    
+
 }
